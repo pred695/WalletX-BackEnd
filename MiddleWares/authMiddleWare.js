@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const pool = require('../Config');
 const queries = require('../Queries/userQueries');
 
+
+// Middleware to verify the user, used in protected
 module.exports.verifyUser = (req, resp, next) => {
     try {
         const token = req.cookies.jwt;

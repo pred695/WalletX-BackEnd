@@ -3,7 +3,8 @@ const queries = require('../Queries/userQueries');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
-const cookieParser = require('cookie-parser');
+
+
 const handleSignUpError = (err) => {
     let errors = { username: '', email: '', password: '' };
     if (err.constraint === 'users_email_key') {
@@ -29,6 +30,8 @@ const handleLogInError = (err) => {
 }
 
 const maxAge = 86400; // 3 days in seconds
+
+// createToken function to generate jwt token, used in logIn function.
 const createToken = (id) => {
     return jwt.sign(
         { id: id },
@@ -37,6 +40,9 @@ const createToken = (id) => {
     );
 };
 
+// @desc    Get all users
+// @route   GET /info
+// For testing purposes
 module.exports.fetch = async (req, resp) => {
     try {
         let result = await pool.query(queries.fetch);
@@ -47,6 +53,9 @@ module.exports.fetch = async (req, resp) => {
     };
 };
 
+// @desc    Search a user by username
+// @route   GET /info/:username
+// For testing purposes
 module.exports.search = async (req, resp) => {
     try {
         const { username } = req.params;
@@ -62,6 +71,9 @@ module.exports.search = async (req, resp) => {
     }
 };
 
+// @desc    Post new user / Register new user
+// @route   POST /signup
+// @access  Public
 module.exports.signUp = async (req, resp) => {
     try {
         const { username, email, password } = req.body;
@@ -89,6 +101,9 @@ module.exports.signUp = async (req, resp) => {
     }
 };
 
+// @desc    Login existing user
+// @route   POST /login
+// @access  Public
 module.exports.logIn = async (req, resp) => {
     try {
         const { username, password } = req.body;
@@ -119,6 +134,9 @@ module.exports.logIn = async (req, resp) => {
     }
 };
 
+// @desc    LogOut a session
+// @route   GET /logout
+// @access  Private
 module.exports.logOut = (req, resp) => {
     resp.cookie('jwt', "", {
         httpOnly: true,
